@@ -1,98 +1,141 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
-
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+import React, { useState } from "react"; // Importa useState
+import {
+  View,
+  Text,
+  ScrollView,
+  SafeAreaView,
+  TouchableOpacity,
+  StyleSheet,
+  StatusBar,
+} from "react-native";
+import { Feather } from "@expo/vector-icons";
+import { useExpenses } from "../../context/ExpenseContext";
+import { ExpenseCard } from "../../components/ExpenseCard";
+import { AddExpenseModal } from "../../components/AddExpenseModal"; // Importa el nuevo componente
 
 export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
+  const { expenses, balance, addExpense } = useExpenses(); // Obtén addExpense del contexto
+  const [modalVisible, setModalVisible] = useState(false); // Estado para controlar la visibilidad del modal
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+  const getCurrentMonth = () => {
+    return new Date().toLocaleString("es-ES", {
+      month: "long",
+      year: "numeric",
+    });
+  };
+
+  return (
+    <SafeAreaView style={styles.safeArea}>
+      <StatusBar barStyle="light-content" />
+      <ScrollView contentContainerStyle={styles.scrollView}>
+        {/* Header Card */}
+        <View style={styles.headerCard}>
+          <View style={styles.headerTopRow}>
+            <Text style={styles.headerTitle}>Total gastado</Text>
+            <Feather name="users" size={24} color="white" />
+          </View>
+          <Text style={styles.headerAmount}>
+            ${balance.totalSpent.toFixed(2)}
+          </Text>
+          <Text style={styles.headerDate}>{getCurrentMonth()}</Text>
+        </View>
+
+        {/* Expenses List */}
+        <Text style={styles.listTitle}>Gastos Recientes</Text>
+        {expenses.length > 0 ? (
+          expenses.map((expense) => (
+            <ExpenseCard key={expense.id} expense={expense} />
+          ))
+        ) : (
+          <Text style={styles.noExpensesText}>No hay gastos registrados.</Text>
+        )}
+      </ScrollView>
+
+      {/* Floating Action Button */}
+      {/* Actualiza el onPress para abrir el modal */}
+      <TouchableOpacity
+        style={styles.fab}
+        onPress={() => setModalVisible(true)}
+      >
+        <Feather name="plus" size={28} color="white" />
+      </TouchableOpacity>
+
+      {/* Renderiza el componente Modal */}
+      <AddExpenseModal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        onAddExpense={addExpense}
+      />
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  safeArea: {
+    flex: 1,
+    backgroundColor: "#F9FAFB",
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  scrollView: {
+    padding: 16,
+    paddingBottom: 80, // Agrega espacio para que el FAB no tape el último elemento
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  headerCard: {
+    backgroundColor: "#4F46E5",
+    padding: 24,
+    borderRadius: 16,
+    marginBottom: 24,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 8,
+  },
+  headerTopRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  headerTitle: {
+    color: "#FFFFFF",
+    fontSize: 16,
+  },
+  headerAmount: {
+    color: "#FFFFFF",
+    fontSize: 36,
+    fontWeight: "bold",
+    marginTop: 8,
+  },
+  headerDate: {
+    color: "#C7D2FE",
+    fontSize: 14,
+    marginTop: 4,
+  },
+  listTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#1F2937",
+    marginBottom: 16,
+  },
+  noExpensesText: {
+    textAlign: "center",
+    color: "#6B7281",
+    marginTop: 20,
+    fontSize: 16,
+  },
+  fab: {
+    position: "absolute",
+    bottom: 24,
+    right: 24,
+    backgroundColor: "#3B82F6",
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
 });

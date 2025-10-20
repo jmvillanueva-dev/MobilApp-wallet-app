@@ -1,33 +1,54 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
+// app/(tabs)/_layout.tsx
+import React from "react";
+import { Tabs } from "expo-router";
+import { Feather } from "@expo/vector-icons"; // Asegúrate de tener instalado @expo/vector-icons
 
-import { HapticTab } from '@/components/haptic-tab';
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
-
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
+export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-      }}>
+        tabBarActiveTintColor: "#4F46E5", // Un color índigo para el ícono activo
+        tabBarInactiveTintColor: "#6B7280", // Un color gris para los inactivos
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          title: "Inicio",
+          headerShown: false,
+          tabBarIcon: ({ color, size }) => (
+            <Feather name="home" size={size} color={color} />
+          ),
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="balance"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          title: "Balance",
+          headerShown: false,
+          tabBarIcon: ({ color, size }) => (
+            <Feather name="dollar-sign" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="receipts"
+        options={{
+          title: "Recibos",
+          headerShown: false,
+          tabBarIcon: ({ color, size }) => (
+            <Feather name="image" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="report"
+        options={{
+          title: "Reporte",
+          headerShown: false,
+          tabBarIcon: ({ color, size }) => (
+            <Feather name="file-text" size={size} color={color} />
+          ),
         }}
       />
     </Tabs>
