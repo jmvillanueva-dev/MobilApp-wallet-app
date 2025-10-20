@@ -11,11 +11,11 @@ import {
 import { Feather } from "@expo/vector-icons";
 import { useExpenses } from "../../context/ExpenseContext";
 import { ExpenseCard } from "../../components/ExpenseCard";
-import { AddExpenseModal } from "../../components/AddExpenseModal"; // Importa el nuevo componente
+import { AddExpenseModal } from "../../components/AddExpenseModal";
 
 export default function HomeScreen() {
-  const { expenses, balance, addExpense } = useExpenses(); // Obtén addExpense del contexto
-  const [modalVisible, setModalVisible] = useState(false); // Estado para controlar la visibilidad del modal
+  const { expenses, balance, addExpense } = useExpenses();
+  const [modalVisible, setModalVisible] = useState(false);
 
   const getCurrentMonth = () => {
     return new Date().toLocaleString("es-ES", {

@@ -1,7 +1,7 @@
 // app/(tabs)/_layout.tsx
 import React from "react";
 import { Tabs } from "expo-router";
-import { Feather } from "@expo/vector-icons"; // Asegúrate de tener instalado @expo/vector-icons
+import { Feather } from "@expo/vector-icons";
 
 export default function TabsLayout() {
   return (

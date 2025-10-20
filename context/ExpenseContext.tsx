@@ -17,7 +17,6 @@ import {
   User,
   SetSettledFunction,
 } from "../types/types";
-import { View, Text } from "react-native"; // Importación necesaria para evitar errores de compilación de RN
 
 // Clave para AsyncStorage
 const STORAGE_KEY = "@SharedExpensesApp:expenses";
@@ -248,8 +247,6 @@ export const ExpenseProvider: React.FC<{ children: React.ReactNode }> = ({
       return prevSettled;
     });
 
-    // Opcional: Si se marca una deuda, se puede querer "limpiar" los gastos.
-    // Por ahora solo la marcamos como resuelta.
   }, []);
 
   const contextValue: ExpenseContextType = useMemo(

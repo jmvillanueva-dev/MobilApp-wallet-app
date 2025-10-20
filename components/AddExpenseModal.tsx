@@ -131,7 +131,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
         </View>
 
         <ScrollView style={styles.form}>
-          <Text style={styles.label}>Descripción</Text>
+          <Text style={styles.label}>Descripción *</Text>
           <TextInput
             style={styles.input}
             placeholder="Ej: Cena con amigos"
@@ -139,7 +139,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
             onChangeText={setDescription}
           />
 
-          <Text style={styles.label}>Monto</Text>
+          <Text style={styles.label}>Monto *</Text>
           <TextInput
             style={styles.input}
             placeholder="$ 0.00"
@@ -148,7 +148,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
             onChangeText={setAmount}
           />
 
-          <Text style={styles.label}>¿Quién pagó?</Text>
+          <Text style={styles.label}>¿Quién pagó? *</Text>
           <View style={styles.pickerContainer}>
             <Picker
               selectedValue={paidBy}
@@ -160,7 +160,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
             </Picker>
           </View>
 
-          <Text style={styles.label}>Participantes</Text>
+          <Text style={styles.label}>Participantes *</Text>
           <View style={styles.participantsContainer}>
             {PARTICIPANTS.map((name) => (
               <TouchableOpacity

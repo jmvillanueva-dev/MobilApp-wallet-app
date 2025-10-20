@@ -6,12 +6,12 @@ import {
   SafeAreaView,
   StyleSheet,
   StatusBar,
+  Image, // 1. IMPORTA el componente Image
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { useExpenses } from "../../context/ExpenseContext";
 import { Expense } from "../../types/types";
 
-// Helper to format date as "15 Oct"
 const formatDate = (dateString: string) => {
   const date = new Date(dateString);
   return date
@@ -19,16 +19,16 @@ const formatDate = (dateString: string) => {
       day: "numeric",
       month: "short",
     })
-    .replace(".", ""); // Remove period after month abbreviation if present
+    .replace(".", "");
 };
 
-// You can keep this as a separate component or in the same file
+// 2. MODIFICA ReceiptCard para que muestre la imagen real
 const ReceiptCard: React.FC<{ expense: Expense }> = ({ expense }) => {
   return (
     <View style={styles.receiptCard}>
-      <View style={styles.receiptImagePlaceholder}>
-        <Feather name="file-text" size={32} color="#9CA3AF" />
-      </View>
+      {/* Usa el componente Image con la URI del recibo */}
+      <Image source={{ uri: expense.receiptUri }} style={styles.receiptImage} />
+
       <Text style={styles.receiptDescription} numberOfLines={1}>
         {expense.description}
       </Text>
@@ -46,7 +46,6 @@ export default function ReceiptsScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="light-content" />
-      {/* Header */}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Galería de Recibos</Text>
         <Text style={styles.headerSubtitle}>
@@ -65,12 +64,10 @@ export default function ReceiptsScreen() {
           </View>
         </View>
 
-        {/* Receipts Grid */}
         <View style={styles.gridContainer}>
           {expenses.map((expense) => (
             <ReceiptCard key={expense.id} expense={expense} />
           ))}
-          {/* Total card from the screenshot */}
           <View style={[styles.receiptCard, styles.totalCard]}>
             <Text style={styles.totalNumber}>{expenses.length}</Text>
             <Text style={styles.totalText}>Total Recibos</Text>
@@ -82,12 +79,13 @@ export default function ReceiptsScreen() {
 }
 
 const styles = StyleSheet.create({
+  // ... (otros estilos se mantienen igual)
   safeArea: {
     flex: 1,
-    backgroundColor: "#F97316", // Orange header background
+    backgroundColor: "#F97316",
   },
   header: {
-    backgroundColor: "#F97316", // bg-orange-500
+    backgroundColor: "#F97316",
     paddingHorizontal: 16,
     paddingVertical: 24,
   },
@@ -98,16 +96,16 @@ const styles = StyleSheet.create({
   },
   headerSubtitle: {
     fontSize: 16,
-    color: "#FFEDD5", // text-orange-100
+    color: "#FFEDD5",
     marginTop: 4,
   },
   scrollViewContent: {
     padding: 16,
-    backgroundColor: "#F9FAFB", // bg-gray-50
+    backgroundColor: "#F9FAFB",
   },
   infoBox: {
-    backgroundColor: "#EFF6FF", // bg-blue-50
-    borderColor: "#BFDBFE", // border-blue-200
+    backgroundColor: "#EFF6FF",
+    borderColor: "#BFDBFE",
     borderWidth: 1,
     padding: 16,
     borderRadius: 12,
@@ -121,12 +119,12 @@ const styles = StyleSheet.create({
   },
   infoTitle: {
     fontWeight: "bold",
-    color: "#1E3A8A", // text-blue-800
+    color: "#1E3A8A",
     fontSize: 16,
   },
   infoSubtitle: {
     fontSize: 14,
-    color: "#1D4ED8", // text-blue-700
+    color: "#1D4ED8",
     marginTop: 2,
   },
   gridContainer: {
@@ -134,9 +132,8 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     justifyContent: "space-between",
   },
-  // Receipt Card Styles
   receiptCard: {
-    width: "48%", // Creates two columns with a small gap
+    width: "48%",
     backgroundColor: "white",
     borderRadius: 12,
     shadowColor: "#000",
@@ -147,17 +144,17 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     padding: 12,
   },
-  receiptImagePlaceholder: {
-    backgroundColor: "#F3F4F6", // bg-gray-100
+  // 3. CAMBIA EL ESTILO para la imagen
+  receiptImage: {
+    backgroundColor: "#F3F4F6", // Color de fondo mientras carga la imagen
     height: 96,
     borderRadius: 8,
-    alignItems: "center",
-    justifyContent: "center",
     marginBottom: 12,
+    width: "100%", // Asegura que la imagen ocupe todo el ancho de la tarjeta
   },
   receiptDescription: {
     fontWeight: "bold",
-    color: "#1F2937", // text-gray-800
+    color: "#1F2937",
     fontSize: 16,
   },
   receiptFooter: {
@@ -168,18 +165,17 @@ const styles = StyleSheet.create({
   },
   receiptDate: {
     fontSize: 12,
-    color: "#9CA3AF", // text-gray-400
+    color: "#9CA3AF",
   },
   receiptAmount: {
     fontWeight: "bold",
-    color: "#4B5563", // text-gray-600
+    color: "#4B5563",
   },
-  // Total Card Specific Styles
   totalCard: {
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#F3F4F6",
-    height: 165, // Match height of other cards for alignment
+    height: 165,
   },
   totalNumber: {
     fontSize: 36,
